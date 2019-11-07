@@ -1,5 +1,6 @@
 
 import 'package:login_with_localapi/src/blocs/validator.dart';
+import 'package:http/http.dart' as http;
 import 'package:login_with_localapi/src/models/login_model.dart';
 import 'package:login_with_localapi/src/models/response_login_model.dart';
 import 'package:login_with_localapi/src/resources/repository.dart';
@@ -8,11 +9,12 @@ import 'package:rxdart/rxdart.dart';
 class LoginBloc extends Object with Validators {
 
   final _email = BehaviorSubject<String>();
+  final _statusLogin = PublishSubject<bool>();
   final _password = BehaviorSubject<String>();
   final _responseLogin = PublishSubject<ResponseLogin>();
   final _loginPost = PublishSubject<LoginPost>();
   final _uid = BehaviorSubject<String>();
-  final _statusLogin = BehaviorSubject<bool>();
+
 
 
   final _repository = Repository();
@@ -43,34 +45,42 @@ class LoginBloc extends Object with Validators {
   submit() async{
     final validEmail = _email.value;
     final validPassword = _password.value;
-    LoginPost loginPost = LoginPost(email: _email.value, password: _password.value);
 
+    LoginPost loginPost = LoginPost(email: _email.value, password: _password.value);
     ResponseLogin responseLogin = await _repository.login(loginPost);
     _responseLogin.sink.add(responseLogin);
+//    print('$validEmail and $validPassword and $responseLogin and ');
+//    print("onTap");
+
+//    final statusLo = responseLogin.error;
+
+
 
 //    if(responseLogin.error){
-//      _statusLogin.add(false);
-//      _uid.add(null);
+//      print('jalan bro bro');
+////      _statusLogin.sink.add(statusLo);
 //    }else{
-//      _uid.sink.add(responseLogin.uid);
-//      _statusLogin.add(true);
+//      print('jalan bro bro else');
+////      _statusLogin.sink.add(statusLo);
 //    }
 
-//    final loginPost = _loginPost;
 
-    print('$validEmail and $validPassword and $responseLogin');
-    print("onTap");
+
+
+  }
+
+  checkStatus() {
+    if(_responseLogin != null){
+      
+    }
   }
 
   dispose(){
     _email.close();
     _password.close();
     _responseLogin.close();
+    _statusLogin.close();
   }
-
-//  login(LoginPost loginPost) async{
-//
-//  }
 
 
 }
